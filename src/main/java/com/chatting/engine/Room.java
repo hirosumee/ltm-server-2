@@ -25,6 +25,9 @@ public class Room {
             i.send(message);
         });
     }
+    public void join(Connection con) {
+        this.connections.add(con);
+    }
     public void setRoomName(String roomName) {
         this.roomName = roomName;
     }

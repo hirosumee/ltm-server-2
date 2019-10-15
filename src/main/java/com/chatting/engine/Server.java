@@ -129,15 +129,20 @@ public class Server extends WebSocketServer {
         }
     }
 
-    void addRoom(Room room) {
+    public Room addRoom(Room room) {
         if (!rooms.containsKey(room.getRoomName())) {
             rooms.put(room.getRoomName(), room);
+            return room;
         }
+        return rooms.get(room.getRoomName());
+    }
+    public Room addRoom(String name) {
+       return addRoom(new Room(name));
     }
     void removeRoom(String roomName) {
         rooms.remove(roomName);
     }
-    Room getRoom(String roomName) {
+    public Room getRoom(String roomName) {
         return rooms.get(roomName);
     }
 

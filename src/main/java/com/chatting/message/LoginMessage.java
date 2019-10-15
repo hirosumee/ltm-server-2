@@ -24,8 +24,8 @@ public class LoginMessage extends Message {
         this.password = password;
     }
 
-    public LoginMessage(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
+//    public LoginMessage(String username, String password) {
+//        this.username = username;
+//        this.password = password;
+//    }
 }

@@ -26,18 +26,20 @@ public class Connection {
         server.removeConnection(this);
     }
 
-    void onSignIn(Session session) {
+    public void onSignIn(Session session) {
         this.session = session;
         this.server.addSession(this);
     }
+
     public void send(String message) {
         webSocket.send(message);
     }
+
     WebSocket getWebSocket() {
         return webSocket;
     }
 
-    Session getSession() {
+    public Session getSession() {
         return session;
     }
 }
