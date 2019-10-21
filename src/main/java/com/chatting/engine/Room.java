@@ -5,28 +5,30 @@ import java.util.Set;
 
 public class Room {
     private String roomName;
-    private Set<Connection> connections;
+    private Set<Session> sessions;
 
-    public Room(String roomName) {
+    Room(String roomName) {
         this.roomName = roomName;
-        connections = new HashSet<>();
+        sessions = new HashSet<>();
     }
 
     public String getRoomName() {
         return roomName;
     }
 
-    public Set<Connection> getConnections() {
-        return connections;
-    }
 
     public void send(String message) {
-        this.connections.forEach(i -> {
+        this.sessions.forEach(i -> {
             i.send(message);
         });
     }
-    public void join(Connection con) {
-        this.connections.add(con);
+    public void join(Session con) {
+        this.sessions.add(con);
+        con.join(this);
+    }
+    public void leave(Session con) {
+        this.sessions.remove(con);
+        con.leave(this);
     }
     public void setRoomName(String roomName) {
         this.roomName = roomName;

@@ -35,7 +35,7 @@ public class LoginHandler implements Handlable {
             if(!isValid) {
                 return new CommonResponseMessage("login", "failed", "Mật khẩu sai");
             }
-            connection.onSignIn(new Session(new UserDTO(username, password)));
+            connection.onSignIn(new UserDTO(username, password));
             return new CommonResponseMessage("login", "successful", username);
         } catch (RecordNotFoundException | NoSuchAlgorithmException e) {
             return new CommonResponseMessage("login", "failed", "User không tồn tại");

@@ -11,9 +11,7 @@ import org.java_websocket.server.WebSocketServer;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 public class Server extends WebSocketServer {
     private final static Logger logger = LogManager.getLogger(Server.class);
@@ -21,8 +19,9 @@ public class Server extends WebSocketServer {
     private Map<String, Handlable> handlers;
     //<Username, Session>
     private Map<String, Session> sessions;
+    //    <socket, con> affect for mapping message
     private Map<WebSocket, Connection> cons;
-    private Map<Session, Set<Connection>> sessionSetMap;
+    // <name, room>
     private Map<String, Room> rooms;
 
     public Server(int port) {
@@ -35,7 +34,6 @@ public class Server extends WebSocketServer {
         handlers = new HashMap<>();
         sessions = new HashMap<>();
         cons = new HashMap<>();
-        sessionSetMap = new HashMap<>();
         rooms = new HashMap<>();
     }
 
@@ -50,7 +48,17 @@ public class Server extends WebSocketServer {
     public void onClose(WebSocket webSocket, int i, String s, boolean b) {
         if (existConnection(webSocket)) {
             getConnection(webSocket).onClose();
+            this.cons.remove(webSocket);
         }
+    }
+
+    @Override
+    public void onError(WebSocket webSocket, Exception e) {
+        if (existConnection(webSocket)) {
+            getConnection(webSocket).onError(e);
+            webSocket.close();
+        }
+        e.printStackTrace();
     }
 
     @Override
@@ -65,13 +73,6 @@ public class Server extends WebSocketServer {
             }
         } catch (IOException e) {
             e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onError(WebSocket webSocket, Exception e) {
-        if (existConnection(webSocket)) {
-            getConnection(webSocket).onError(e);
         }
     }
 
@@ -95,21 +96,8 @@ public class Server extends WebSocketServer {
 
     void removeConnection(Connection connection) {
         this.cons.remove(connection.getWebSocket());
-        removeConnectionFrom(connection);
     }
 
-    private void removeConnectionFrom(Connection connection) {
-        sessionSetMap.forEach((k, v) -> {
-            v.remove(connection);
-        });
-    }
-
-    private void addConnectionTo(Session session, Connection connection) {
-        if (sessionSetMap.containsKey(session)) {
-            sessionSetMap.put(session, new HashSet<>());
-        }
-        sessionSetMap.get(session).add(connection);
-    }
 
     //
     public void registerHandler(String type, Handlable handler) {
@@ -120,51 +108,43 @@ public class Server extends WebSocketServer {
         this.handlers.remove(type);
     }
 
-    void addSession(Connection connection) {
-        Session session = connection.getSession();
+    void addSession(Session session) {
         String username = session.getUsername();
         if (!this.sessions.containsKey(username)) {
             this.sessions.put(username, session);
-            addConnectionTo(session, connection);
         }
     }
 
-    public Room addRoom(Room room) {
-        if (!rooms.containsKey(room.getRoomName())) {
-            rooms.put(room.getRoomName(), room);
-            return room;
-        }
-        return rooms.get(room.getRoomName());
-    }
-    public Room addRoom(String name) {
-       return addRoom(new Room(name));
-    }
-    void removeRoom(String roomName) {
-        rooms.remove(roomName);
-    }
-    public Room getRoom(String roomName) {
-        return rooms.get(roomName);
+    Session getSession(String username) {
+        return this.sessions.get(username);
     }
 
     void removeSession(String username) {
         this.sessions.remove(username);
     }
 
-    private boolean isOnline(Session session) {
-        if (!sessionSetMap.containsKey(session)) return false;
-        Set<Connection> set = sessionSetMap.get(session);
-        return set.size() > 0;
+    private Room addRoom(Room room) {
+        if (!rooms.containsKey(room.getRoomName())) {
+            rooms.put(room.getRoomName(), room);
+            return room;
+        }
+        return rooms.get(room.getRoomName());
     }
 
-    boolean isOnline(String username) {
-        Session session = null;
-        for (Session ss : sessionSetMap.keySet()) {
-            if (ss.getUsername().equals(username)) {
-                session = ss;
-            }
-        }
-        if (session == null) return false;
-        return isOnline(session);
+    public Room addRoom(String name) {
+        return addRoom(new Room(name));
     }
+
+    void removeRoom(String roomName) {
+        rooms.remove(roomName);
+    }
+
+    public Room getRoom(String roomName) {
+        if (!rooms.containsKey(roomName)) {
+            rooms.put(roomName, new Room(roomName));
+        }
+        return rooms.get(roomName);
+    }
+
 
 }

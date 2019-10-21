@@ -1,12 +1,8 @@
 package com.chatting;
 
 import com.chatting.engine.Server;
-import com.chatting.handlers.LoginHandler;
-import com.chatting.handlers.RegisterHandler;
-import com.chatting.handlers.RoomListHandler;
-import com.chatting.message.LoginMessage;
-import com.chatting.message.RegisterMessage;
-import com.chatting.message.RoomListMessage;
+import com.chatting.handlers.*;
+import com.chatting.message.*;
 import com.chatting.vendor.DbConnection;
 
 import java.sql.SQLException;
@@ -19,6 +15,9 @@ public class App {
             server.registerHandler(RegisterMessage.type, new RegisterHandler());
             server.registerHandler(LoginMessage.type, new LoginHandler());
             server.registerHandler(RoomListMessage.type, new RoomListHandler());
+            server.registerHandler(MessageListMessage.type, new MessageListHandler());
+            server.registerHandler(MessageNew.type, new MessageNewHandler());
+            server.registerHandler(UserFindMessage.type, new UserFindHandler());
             server.start();
         } catch (SQLException e) {
             e.printStackTrace();

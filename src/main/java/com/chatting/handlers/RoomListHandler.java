@@ -6,6 +6,7 @@ import com.chatting.dtos.UserDTO;
 import com.chatting.engine.Connection;
 import com.chatting.engine.Room;
 import com.chatting.engine.Server;
+import com.chatting.engine.Session;
 import com.chatting.engine.interfaces.Handlable;
 import com.chatting.message.RoomListResponseMessage;
 import com.chatting.utils.RoomListUtils;
@@ -19,7 +20,7 @@ public class RoomListHandler implements Handlable {
     public void execute(Server server, Connection connection, String msg) {
         UserDTO user = (UserDTO) connection.getSession().getUser();
         List<RoomDTO> list = new RoomDAO().getFromUsername(user.getUsername());
-        joinAll(list, server, connection);
+        joinAll(list, server, connection.getSession());
         ObjectMapper mapper = new ObjectMapper();
         RoomListResponseMessage res = RoomListUtils.fromRoomList(list);
         try {
@@ -28,10 +29,10 @@ public class RoomListHandler implements Handlable {
             e.printStackTrace();
         }
     }
-    private void joinAll(List<RoomDTO> list, Server server, Connection connection) {
+    private void joinAll(List<RoomDTO> list, Server server, Session session) {
         list.forEach(i -> {
             Room room = server.addRoom(String.valueOf(i.getId()));
-            room.join(connection);
+            room.join(session);
         });
     }
 }
