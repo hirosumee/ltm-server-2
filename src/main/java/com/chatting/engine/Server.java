@@ -146,5 +146,9 @@ public class Server extends WebSocketServer {
         return rooms.get(roomName);
     }
 
-
+    public String getSessionStatus(String username) {
+        boolean f = this.sessions.containsKey(username);
+        if(!f) return SessionStatus.offline;
+        return this.sessions.get(username).getStatus();
+    }
 }

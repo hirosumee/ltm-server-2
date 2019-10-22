@@ -18,6 +18,10 @@ public class App {
             server.registerHandler(MessageListMessage.type, new MessageListHandler());
             server.registerHandler(MessageNew.type, new MessageNewHandler());
             server.registerHandler(UserFindMessage.type, new UserFindHandler());
+            server.registerHandler(RoomCreateMessage.type, new RoomCreateHandler());
+            server.registerHandler(GroupCreateMessage.type, new GroupCreateHandler());
+            server.registerHandler(JoinListMessage.type, new JoinListHandler());
+            server.registerHandler(UserStatusMessage.type, new UserStatusHandler());
             server.start();
         } catch (SQLException e) {
             e.printStackTrace();

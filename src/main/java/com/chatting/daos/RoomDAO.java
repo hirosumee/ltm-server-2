@@ -58,6 +58,14 @@ public class RoomDAO extends DAO {
         return id;
     }
 
+    public long createGroup(String creator, String roomName) {
+        ArrayList<String> members = new ArrayList<>();
+        members.add(creator);
+        long id = this.create(creator, "group", roomName);
+        createJoin(id, members, creator);
+        return id;
+    }
+
     private void createJoin(long roomId, List<String> members, String creator) {
         JoinDAO joinDAO = new JoinDAO();
         members.forEach(mem -> {

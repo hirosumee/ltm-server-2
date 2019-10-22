@@ -11,9 +11,9 @@ public class IdleThread extends Thread {
         try {
             Thread.sleep(3000);
             if (session.getConnections() > 0) {
-                session.setStatus("online");
+                session.setStatus(SessionStatus.online);
             } else {
-                session.setStatus("offline");
+                session.setStatus(SessionStatus.offline);
             }
         } catch (InterruptedException e) {
             e.printStackTrace();

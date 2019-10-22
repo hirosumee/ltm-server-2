@@ -25,7 +25,7 @@ public class Session {
 
     public void addConnection(Connection con) {
         this.connections.add(con);
-        if (!status.equals("online")) {
+        if (!status.equals(SessionStatus.online)) {
             status = "online";
         }
     }
@@ -38,7 +38,7 @@ public class Session {
     }
 
     private void waitReconnect() {
-        this.status = "idle";
+        this.status = SessionStatus.idle;
         Thread thread = new IdleThread(this);
         thread.start();
     }

@@ -4,7 +4,6 @@ import com.chatting.daos.UserDAO;
 import com.chatting.dtos.UserDTO;
 import com.chatting.engine.Connection;
 import com.chatting.engine.Server;
-import com.chatting.engine.Session;
 import com.chatting.engine.interfaces.Handlable;
 import com.chatting.exceptions.RecordNotFoundException;
 import com.chatting.message.CommonResponseMessage;
