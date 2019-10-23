@@ -92,4 +92,12 @@ public class RoomDAO extends DAO {
 
         return id;
     }
+    public boolean isGroup(int roomId) {
+        try {
+            RoomDTO room = this.getFromId(roomId);
+            return room.getType().equals("group");
+        } catch (RecordNotFoundException e) {
+            return false;
+        }
+    }
 }

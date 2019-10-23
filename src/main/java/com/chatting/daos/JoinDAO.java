@@ -91,4 +91,21 @@ public class JoinDAO extends DAO {
         }
         return 0;
     }
+    public boolean isExist(String username, int roomId) {
+        String SQL = this.injectTableName("SELECT id  FROM %s WHERE id_room = ? AND username = ?");
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(SQL);
+            preparedStatement.setInt(1, roomId);
+            preparedStatement.setString(2, username);
+            ResultSet rs = preparedStatement.executeQuery();
+            while(rs.next()) {
+                return true;
+            }
+            return false;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
 }

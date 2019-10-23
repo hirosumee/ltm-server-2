@@ -22,6 +22,9 @@ public class App {
             server.registerHandler(GroupCreateMessage.type, new GroupCreateHandler());
             server.registerHandler(JoinListMessage.type, new JoinListHandler());
             server.registerHandler(UserStatusMessage.type, new UserStatusHandler());
+            server.registerHandler(GroupInviteMessage.type, new GroupInviteHandler());
+            server.registerHandler(GroupKickMessage.type, new GroupKickHandler());
+            server.registerHandler(ChangeStatusMessage.type, new ChangeStatusHandler());
             server.start();
         } catch (SQLException e) {
             e.printStackTrace();
