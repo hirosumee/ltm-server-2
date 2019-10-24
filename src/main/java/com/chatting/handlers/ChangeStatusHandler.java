@@ -18,8 +18,8 @@ public class ChangeStatusHandler implements Handlable {
             String status = message.status;
             if (status.equals(SessionStatus.offline) ||
                     status.equals(SessionStatus.idle) ||
-                    status.equals(SessionStatus.offline)) {
-                connection.getSession().setStatus(message.status);
+                    status.equals(SessionStatus.online)) {
+                connection.getSession().setPersistStatus(message.status);
             }
         } catch (IOException e) {
             e.printStackTrace();

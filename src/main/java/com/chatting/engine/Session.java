@@ -10,6 +10,11 @@ public class Session {
     private Set<Connection> connections = new HashSet<>();
     private Set<Room> rooms = new HashSet<>();
     private String status = "idle";
+    private boolean persistStatus = false;
+
+    public Session(User user) {
+        this.user = user;
+    }
 
     public String getUsername() {
         return user.getUsername();
@@ -51,10 +56,6 @@ public class Session {
         this.rooms.remove(room);
     }
 
-    public Session(User user) {
-        this.user = user;
-    }
-
     void onClose() {
         for (Room room : rooms) {
             room.leave(this);
@@ -66,6 +67,17 @@ public class Session {
     }
 
     public void setStatus(String status) {
+        if (!persistStatus) {
+            this.status = status;
+        }
+    }
+
+    public void setPersistStatus(String status) {
+        if (status == SessionStatus.online) {
+            persistStatus = false;
+        } else {
+            persistStatus = true;
+        }
         this.status = status;
     }
 
