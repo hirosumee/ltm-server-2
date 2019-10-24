@@ -21,7 +21,7 @@ public class GroupKickHandler implements Handlable {
             if (roomDAO.isGroup(message.room) && !message.equals(connection.getSession().getUsername())) {
                 if (dao.isExist(message.username, message.room)) {
                     new JoinDAO().removeByRoomAndUser(message.room, message.username);
-                    connection.send(msg);
+                    server.getRoom(String.valueOf(message.room)).send(mapper.writeValueAsString(message));
                 }
             }
         } catch (IOException e) {

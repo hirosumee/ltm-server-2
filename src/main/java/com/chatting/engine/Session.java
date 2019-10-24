@@ -9,7 +9,7 @@ public class Session {
     private User user;
     private Set<Connection> connections = new HashSet<>();
     private Set<Room> rooms = new HashSet<>();
-    private String status = "idle";
+    private String status = SessionStatus.idle;
     private boolean persistStatus = false;
 
     public Session(User user) {
@@ -31,7 +31,7 @@ public class Session {
     public void addConnection(Connection con) {
         this.connections.add(con);
         if (!status.equals(SessionStatus.online)) {
-            status = "online";
+            setStatus(SessionStatus.online);
         }
     }
 
@@ -43,7 +43,7 @@ public class Session {
     }
 
     private void waitReconnect() {
-        this.status = SessionStatus.idle;
+        this.setStatus(SessionStatus.idle);
         Thread thread = new IdleThread(this);
         thread.start();
     }
@@ -67,9 +67,13 @@ public class Session {
     }
 
     public void setStatus(String status) {
-        if (!persistStatus) {
+        if (!isPersistStatus()) {
             this.status = status;
         }
+    }
+
+    private boolean isPersistStatus() {
+        return this.persistStatus;
     }
 
     public void setPersistStatus(String status) {

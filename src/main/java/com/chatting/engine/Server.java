@@ -115,7 +115,7 @@ public class Server extends WebSocketServer {
         }
     }
 
-    Session getSession(String username) {
+    public Session getSession(String username) {
         return this.sessions.get(username);
     }
 

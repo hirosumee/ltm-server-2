@@ -4,6 +4,7 @@ import com.chatting.daos.JoinDAO;
 import com.chatting.daos.RoomDAO;
 import com.chatting.engine.Connection;
 import com.chatting.engine.Server;
+import com.chatting.engine.Session;
 import com.chatting.engine.interfaces.Handlable;
 import com.chatting.message.GroupInviteMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,7 +24,12 @@ public class GroupInviteHandler implements Handlable {
                     return;
                 }
                 dao.create(message.room, message.username, connection.getSession().getUsername());
-                connection.send(msg);
+                Session session = server.getSession(message.username);
+                String _temp = mapper.writeValueAsString(message);
+                if(session != null) {
+                    session.send(_temp);
+                }
+                server.getRoom(String.valueOf(message.room)).send(_temp);
             }
         } catch (IOException e) {
             e.printStackTrace();

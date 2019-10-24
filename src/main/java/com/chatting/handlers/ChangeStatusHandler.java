@@ -20,6 +20,7 @@ public class ChangeStatusHandler implements Handlable {
                     status.equals(SessionStatus.idle) ||
                     status.equals(SessionStatus.online)) {
                 connection.getSession().setPersistStatus(message.status);
+                connection.send(mapper.writeValueAsString(message));
             }
         } catch (IOException e) {
             e.printStackTrace();
