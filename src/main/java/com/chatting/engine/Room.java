@@ -12,21 +12,21 @@ public class Room {
         sessions = new HashSet<>();
     }
 
-    public String getRoomName() {
+    synchronized public String getRoomName() {
         return roomName;
     }
 
 
-    public void send(String message) {
+    synchronized public void send(String message) {
         this.sessions.forEach(i -> {
             i.send(message);
         });
     }
-    public void join(Session con) {
+    synchronized public void join(Session con) {
         this.sessions.add(con);
         con.join(this);
     }
-    public void leave(Session con) {
+    synchronized void leave(Session con) {
         this.sessions.remove(con);
         con.leave(this);
     }

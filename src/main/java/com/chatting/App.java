@@ -3,6 +3,7 @@ package com.chatting;
 import com.chatting.engine.Server;
 import com.chatting.handlers.*;
 import com.chatting.message.*;
+import com.chatting.middlewares.AuthRequireMiddleware;
 import com.chatting.vendor.DbConnection;
 
 import java.sql.SQLException;
@@ -12,6 +13,7 @@ public class App {
         try {
             DbConnection.getInstance();
             Server server = new Server(8080);
+            server.registerMiddleware(new AuthRequireMiddleware());
             server.registerHandler(RegisterMessage.type, new RegisterHandler());
             server.registerHandler(LoginMessage.type, new LoginHandler());
             server.registerHandler(RoomListMessage.type, new RoomListHandler());
